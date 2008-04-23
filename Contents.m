@@ -12,11 +12,15 @@
 % Shortest path algorithms
 % dijkstra                   - Dijkstra's shortest path algorithm
 %
+% Minimum spanning tree algorithms
+% primmst                    - Compute an MST using Prim's algorithm
+%
 % Connected components
 % scomponents                - Compute strongly connected components
 % 
 % Statistics
 % clustercoeffs              - Compute clustering coefficients
+% dirclustercoeffs           - Compute directed clustering coefficients
 % corenums                   - Compute core numbers
 %
 % Helper functions

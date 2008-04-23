@@ -128,6 +128,33 @@ results(end).mat_fast = mat_fast;
 results(end).mex_std = mex_std;
 results(end).mat_std = mat_std;
 
+%% Clustering coefficients
+nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
+comp_results=[];
+szs=[1 10 100 5000 10000 50000];
+for szi=1:length(szs)
+    % Matlab needs 1 iteration to compile the function
+    if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
+    for rep=1:nrep
+        A=sprand(szs(szi),szs(szi),25/szs(szi));
+        At=A'; 
+        [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
+        [cp ri ati]=sparse_to_csr(At); As.cp=cp; As.ri=ri; As.ati=ati;
+        tic; cc1=clustering_coefficients(A); mex_std=mex_std+toc;
+        tic; cc2=clustering_coefficients(At,struct('istrans',1,'nocheck',1));
+            mex_fast=mex_fast+toc;
+        tic; cc3=dirclustercoeffs(A); mat_std=mat_std+toc;
+        tic; cc4=dirclustercoeffs(As); mat_fast=mat_fast+toc;
+    end
+    comp_results(end+1,:) = [mex_fast mat_fast mex_std mat_std];
+end
+comp_results=diff(comp_results);
+results(end+1).name='dirclustercoeffs';
+results(end).mex_fast = mex_fast;
+results(end).mat_fast = mat_fast;
+results(end).mex_std = mex_std;
+results(end).mat_std = mat_std;
+
 %% Summarize the results
 % We are going to summarize the results in a bar plot based on the
 % algorithm.  Each algorithm is a single bar, where the performance of the
