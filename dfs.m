@@ -42,8 +42,9 @@ rs=zeros(2*n,1); rss=0; % recursion stack holds two nums (v,ri)
 % start dfs at u
 t=0; targethit=0;
 for i=1:n
-    if i==1, v=u; d(v)=0; dt(v)=t; t=t+1; ri=rp(v);
+    if i==1, v=u;
     else v=mod(u+i-1,n)+1; if d(v)>0, continue; end, end
+    d(v)=0; dt(v)=t; t=t+1; ri=rp(v);
     rss=rss+1; rs(2*rss-1)=v; rs(2*rss)=ri; % add v to the stack
     while rss>0
         v=rs(2*rss-1); ri=rs(2*rss); rss=rss-1; % pop v from the stack

@@ -155,6 +155,39 @@ results(end).mat_fast = mat_fast;
 results(end).mex_std = mex_std;
 results(end).mat_std = mat_std;
 
+%% Minimum spanning tree
+nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
+comp_results=[];
+szs=[10 100 5000 10000];
+for szi=1:length(szs)
+    % Matlab needs 1 iteration to compile the function
+    if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
+    for rep=1:nrep
+        A=abs(sprandsym(szs(szi),25/szs(szi)));
+        At=A'; 
+        [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
+        tic; T1=prim_mst(A); mex_std=mex_std+toc;
+        tic; [t1i t1j t1v]=prim_mst(At,struct('istrans',1,'nocheck',1));
+            mex_fast=mex_fast+toc;
+        tic; T2=mst_prim(A,0); mat_std=mat_std+toc;
+        tic; [t2i t2j t2v]=mst_prim(As,0); mat_fast=mat_fast+toc;
+        T1f=sparse(t1i,t1j,t1v,size(A,1),size(A,2));
+        T2f=sparse(t2i,t2j,t2v,size(A,1),size(A,2));
+        if ~isequal(T1,T2) || ~isequal(T1f+T1f',T2f+T2f') || ...
+                ~isequal(T1,T2f+T2f')
+            warning('gaimc:mst_prim',...
+                'incorrect results from mst_prim (%i,%i)', szi, rep);
+        end     
+    end
+    comp_results(end+1,:) = [mex_fast mat_fast mex_std mat_std];
+end
+comp_results=diff(comp_results);
+results(end+1).name='mst_prim';
+results(end).mex_fast = mex_fast;
+results(end).mat_fast = mat_fast;
+results(end).mex_std = mex_std;
+results(end).mat_std = mat_std;
+
 %% Summarize the results
 % We are going to summarize the results in a bar plot based on the
 % algorithm.  Each algorithm is a single bar, where the performance of the
