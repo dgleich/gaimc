@@ -9,7 +9,7 @@
 %% Setup the environment
 % We need MatlabBGL on the path
 graphdir = '../graphs/';
-matlabbgldir = '~/dev/matlab/matlab_bgl';
+matlabbgldir = '~/dev/matlab-bgl/work';
 try
     addpath(matlabbgldir); % change this to your matlab_bgl path
     ci=components(sparse(ones(5)));
@@ -27,6 +27,7 @@ end
 %%
 % initalize the results structure
 results=[];
+mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
 
 %% Depth first search
 % To compare these functions, we have to make a copy and then delete it
@@ -128,9 +129,9 @@ results(end).mat_fast = mat_fast;
 results(end).mex_std = mex_std;
 results(end).mat_std = mat_std;
 
-%% Clustering coefficients
+%% Directed Clustering coefficients
 nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
-comp_results=[];
+comp_results=[mex_fast mat_fast mex_std mat_std];
 szs=[1 10 100 5000 10000 50000];
 for szi=1:length(szs)
     % Matlab needs 1 iteration to compile the function
@@ -175,6 +176,7 @@ for szi=1:length(szs)
         T2f=sparse(t2i,t2j,t2v,size(A,1),size(A,2));
         if ~isequal(T1,T2) || ~isequal(T1f+T1f',T2f+T2f') || ...
                 ~isequal(T1,T2f+T2f')
+            keyboard
             warning('gaimc:mst_prim',...
                 'incorrect results from mst_prim (%i,%i)', szi, rep);
         end     
@@ -183,6 +185,60 @@ for szi=1:length(szs)
 end
 comp_results=diff(comp_results);
 results(end+1).name='mst_prim';
+results(end).mex_fast = mex_fast;
+results(end).mat_fast = mat_fast;
+results(end).mex_std = mex_std;
+results(end).mat_std = mat_std;
+
+%% Directed Clustering coefficients
+nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
+dircc_results=[mex_fast mat_fast mex_std mat_std];
+szs=[1 10 100 5000 10000 50000];
+for szi=1:length(szs)
+    % Matlab needs 1 iteration to compile the function
+    if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
+    for rep=1:nrep
+        A=sprand(szs(szi),szs(szi),25/szs(szi));
+        At=A'; 
+        [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
+        [cp ri ati]=sparse_to_csr(At); As.cp=cp; As.ri=ri; As.ati=ati;
+        tic; cc1=clustering_coefficients(A); mex_std=mex_std+toc;
+        tic; cc2=clustering_coefficients(At,struct('istrans',1,'nocheck',1));
+            mex_fast=mex_fast+toc;
+        tic; cc3=dirclustercoeffs(A); mat_std=mat_std+toc;
+        tic; cc4=dirclustercoeffs(As); mat_fast=mat_fast+toc;
+    end
+    dircc_results(end+1,:) = [mex_fast mat_fast mex_std mat_std];
+end
+dircc_results=diff(dircc_results);
+results(end+1).name='dirclustercoeffs';
+results(end).mex_fast = mex_fast;
+results(end).mat_fast = mat_fast;
+results(end).mex_std = mex_std;
+results(end).mat_std = mat_std;
+
+%% Directed Clustering coefficients
+nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
+undircc_results=[mex_fast mat_fast mex_std mat_std];
+szs=[1 10 100 5000 10000 50000];
+for szi=1:length(szs)
+    % Matlab needs 1 iteration to compile the function
+    if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
+    for rep=1:nrep
+        A=abs(sprandsym(szs(szi),25/szs(szi)));
+        At=A'; 
+        [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
+        tic; cc1=clustering_coefficients(A,struct('undirected',1)); mex_std=mex_std+toc;
+        tic; cc2=clustering_coefficients(At,struct('undirected',1,'istrans',1,'nocheck',1));
+            mex_fast=mex_fast+toc;
+        tic; cc3=clustercoeffs(A); mat_std=mat_std+toc;
+        tic; cc4=clustercoeffs(As); mat_fast=mat_fast+toc;
+    end
+    undircc_results(end+1,:) = [mex_fast mat_fast mex_std mat_std];
+end
+%%
+undircc_results=diff(dircc_results);
+results(end+1).name='clustercoeffs';
 results(end).mex_fast = mex_fast;
 results(end).mat_fast = mat_fast;
 results(end).mex_std = mex_std;
