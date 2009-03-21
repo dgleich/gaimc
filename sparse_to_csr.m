@@ -12,7 +12,7 @@ function [rp ci ai]=sparse_to_csr(A,varargin)
 %   A=sparse(6,6); A(1,1)=5; A(1,5)=2; A(2,3)=-1; A(4,1)=1; A(5,6)=1; 
 %   [rp ci ai]=sparse_to_csr(A)
 %
-% See also SPARSE_TO_CSC
+% See also SPARSE
 
 % David Gleich
 % Copyright, Stanford University, 2008
