@@ -1,18 +1,31 @@
 function h = graph_draw(adj, xy, varargin)
-%  [x, y, h] = graph_draw(adj, varargin)  
+% GRAPH_DRAW Draw a picture of a graph when the coordinates are known
 %
-% INPUTS:      ADJ   -  Adjacency matrix (source, sink)
+% graph_draw(A, xy) draws a picture of graph A where node i is placed
+% at x = xy(i,1), y = xy(i,2).  In the drawing, shaded nodes have 
+% self loops.
+%
+% Some of the parameters of the drawing are controlled by specifying
+% optional parameters in the call graph_draw(A, xy, key, value).  The keys
+% and default values are 
 %      'linestyle'   -  default '-' 
 %      'linewidth'   -  default .5
 %      'linecolor'   -  default Black
 %      'fontsize'    -  fontsize for labels, default 8 
 %      'labels'      -  Cell array containing labels <Default : '1':'N'>
 %      'shapes'      -  1 if node is a box, 0 if oval <Default : zeros>
+% 
+% h = graph_draw(A,xy,...) returns a handle for each object.  h(i,1) is
+% the text handle for vertex i, and h(i,2) is the circle handle for
+% vertex i.  
 %
-% OUTPUT: h  -  Object handles [h(i,1) is the text handle - color
-%                               h(i,2) is the circle handle - facecolor]
-% NOTES: 
-%          Shades  nodes linked to self ! 
+% Originally written by Erik A. Johnson, Ali Taylan Cemgil, and Leon Peskin
+% Modified by David F. Gleich for gaimc package.
+%
+% See also GPLOT
+% 
+% Example:
+
 
 % 2009-02-26 interface modified by David Gleich <dgleich@stanford.edu> 
 %            to remove automatic layout
