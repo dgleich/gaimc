@@ -3,6 +3,6 @@ function test_main
 test_sparse_to_csr
 test_dfs
 test_load_gaimc_graph
-
+test_largest_component
 
 end

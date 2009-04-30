@@ -1,8 +1,8 @@
-function test_gaimc_graph
+function load_test_gaimc_graph
 
 %%
 P1=load('../graphs/kt-7-2.mat');
-P2=gaimc_graph('kt-7-2.mat');
+P2=load_gaimc_graph('kt-7-2.mat');
 if ~isequal(P1,P2)
     error('gaimc_graph failed on kt-7-2.mat');
 else
@@ -11,7 +11,7 @@ end
 
 %%
 P1=load('../graphs/kt-7-2');
-P2=gaimc_graph('kt-7-2');
+P2=load_gaimc_graph('kt-7-2');
 if ~isequal(P1,P2)
     error('gaimc_graph failed on kt-7-2');
 else
@@ -21,7 +21,7 @@ end
 %%
 load('../graphs/clr-24-1');
 P1 = struct('A',A,'labels',labels,'xy',xy);
-gaimc_graph('clr-24-1');
+load_gaimc_graph('clr-24-1');
 P2 = struct('A',A,'labels',labels,'xy',xy);
 
 if ~isequal(P1,P2)
