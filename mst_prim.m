@@ -15,8 +15,12 @@ function varargout=mst_prim(A,full,u)
 if ~exist('full','var') || isempty(full), full=0; end
 if ~exist('target','var') || isempty(full), u=1; end
 
-if isstruct(A), rp=A.rp; ci=A.ci; ai=A.ai; check=0;
-else [rp ci ai]=sparse_to_csr(A); check=1;
+if isstruct(A), 
+    rp=A.rp; ci=A.ci; ai=A.ai; 
+    check=0;
+else
+    [rp ci ai]=sparse_to_csr(A); 
+    check=1;
 end
 if check && any(ai)<0, error('gaimc:prim', ...
         'prim''s algorithm cannot handle negative edge weights.'); end
