@@ -17,6 +17,7 @@
 %
 % Connected components
 % scomponents                - Compute strongly connected components
+% largest_component          - Selects only the largest component
 % 
 % Statistics
 % clustercoeffs              - Compute clustering coefficients
