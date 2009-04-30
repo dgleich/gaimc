@@ -2,6 +2,10 @@
 load_gaimc_graph('bfs_example.mat') % use the dfs example from Boost
 d = bfs(A,1)
 
+%% dfs
+load_gaimc_graph('dfs_example.mat') % use the dfs example from Boost
+d = dfs(A,1)
+ 
 %% scomponents
 % scomponents
 load('graphs/cores_example'); % the graph A has three components
