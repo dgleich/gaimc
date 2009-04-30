@@ -9,7 +9,7 @@
 %% Setup the environment
 % We need MatlabBGL on the path
 graphdir = '../graphs/';
-matlabbgldir = '~/dev/matlab-bgl/work';
+matlabbgldir = '~/dev/matlab-bgl/4.0';
 try
     addpath(matlabbgldir); % change this to your matlab_bgl path
     ci=components(sparse(ones(5)));
@@ -35,6 +35,7 @@ copyfile(['..' filesep 'dfs.m'],'dfstest.m');
 graphs = {'all_shortest_paths_example', 'clr-24-1', 'cs-stanford', ...
     'minnesota','tapir'};
 nrep=30; ntests=100; 
+fprintf(repmat(' ',1,76));
 for rep=1:nrep
     % Matlab needs 1 iteration to compile the function
     if nrep==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
@@ -42,6 +43,8 @@ for rep=1:nrep
         load([graphdir graphs{gi} '.mat']); n=size(A,1);
         At=A'; [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
         for ti=1:ntests
+            fprintf([repmat('\b',1,76) '%20s rep=%3i graph=%-30s trial=%4i'], ...
+                'dfs',rep,graphs{gi},ti);
             v=ceil(n*rand(1));
             tic; d1=dfs(A,v); mex_std=mex_std+toc;
             tic; d2=dfs(At,v,struct('istrans',1,'nocheck',1)); 
@@ -54,6 +57,7 @@ for rep=1:nrep
         end
     end
 end
+fprintf('\n');
 delete('dfstest.m');
 results(end+1).name='dfs';
 results(end).mex_fast = mex_fast;
@@ -68,9 +72,11 @@ nrep=30;
 szs=[1 10 100 5000 10000 50000];
 comp_results=[mex_fast mat_fast mex_std mat_std];
 for szi=1:length(szs)
+    fprintf('\n%20s size=%-5i     ', 'scomponents', szs(szi));
     % Matlab needs 1 iteration to compile the function
     if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
     for rep=1:nrep
+        fprintf('\b\b\b\b'); fprintf(' %3i', rep); 
         A=sprand(szs(szi),szs(szi),25/szs(szi));
         At=A'; [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
         tic; cc1=components(A); mex_std=mex_std+toc;
@@ -111,6 +117,8 @@ for rep=1:nrep
         load([graphdir graphs{gi} '.mat']); n=size(A,1);
         At=A'; [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
         for ti=1:ntests
+            fprintf([repmat('\b',1,66) '%20s rep=%3i graph=%-20s trial=%4i'], ...
+                'dijkstra',rep,graphs{gi},ti);
             v=ceil(n*rand(1));
             tic; d1=dijkstra_sp(A,v); mex_std=mex_std+toc;
             tic; d2=dijkstra_sp(At,v,struct('istrans',1,'nocheck',1)); 
@@ -123,6 +131,7 @@ for rep=1:nrep
         end
     end
 end
+fprintf('\n');
 results(end+1).name='dijkstra';
 results(end).mex_fast = mex_fast;
 results(end).mat_fast = mat_fast;
@@ -134,9 +143,11 @@ nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
 comp_results=[mex_fast mat_fast mex_std mat_std];
 szs=[1 10 100 5000 10000 50000];
 for szi=1:length(szs)
+    fprintf('\n%20s size=%-5i     ', 'dirclustercoeffs', szs(szi));
     % Matlab needs 1 iteration to compile the function
     if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
     for rep=1:nrep
+        fprintf('\b\b\b\b'); fprintf(' %3i', rep); 
         A=sprand(szs(szi),szs(szi),25/szs(szi));
         At=A'; 
         [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
@@ -149,6 +160,7 @@ for szi=1:length(szs)
     end
     comp_results(end+1,:) = [mex_fast mat_fast mex_std mat_std];
 end
+fprintf('\n');
 comp_results=diff(comp_results);
 results(end+1).name='dirclustercoeffs';
 results(end).mex_fast = mex_fast;
@@ -161,9 +173,11 @@ nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
 comp_results=[];
 szs=[10 100 5000 10000];
 for szi=1:length(szs)
+    fprintf('\n%20s size=%-5i     ', 'mst_prim', szs(szi));
     % Matlab needs 1 iteration to compile the function
     if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
     for rep=1:nrep
+        fprintf('\b\b\b\b'); fprintf(' %3i', rep); 
         A=abs(sprandsym(szs(szi),25/szs(szi)));
         At=A'; 
         [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
@@ -183,6 +197,7 @@ for szi=1:length(szs)
     end
     comp_results(end+1,:) = [mex_fast mat_fast mex_std mat_std];
 end
+fprintf('\n');
 comp_results=diff(comp_results);
 results(end+1).name='mst_prim';
 results(end).mex_fast = mex_fast;
@@ -190,41 +205,16 @@ results(end).mat_fast = mat_fast;
 results(end).mex_std = mex_std;
 results(end).mat_std = mat_std;
 
-%% Directed Clustering coefficients
-nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
-dircc_results=[mex_fast mat_fast mex_std mat_std];
-szs=[1 10 100 5000 10000 50000];
-for szi=1:length(szs)
-    % Matlab needs 1 iteration to compile the function
-    if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
-    for rep=1:nrep
-        A=sprand(szs(szi),szs(szi),25/szs(szi));
-        At=A'; 
-        [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
-        [cp ri ati]=sparse_to_csr(At); As.cp=cp; As.ri=ri; As.ati=ati;
-        tic; cc1=clustering_coefficients(A); mex_std=mex_std+toc;
-        tic; cc2=clustering_coefficients(At,struct('istrans',1,'nocheck',1));
-            mex_fast=mex_fast+toc;
-        tic; cc3=dirclustercoeffs(A); mat_std=mat_std+toc;
-        tic; cc4=dirclustercoeffs(As); mat_fast=mat_fast+toc;
-    end
-    dircc_results(end+1,:) = [mex_fast mat_fast mex_std mat_std];
-end
-dircc_results=diff(dircc_results);
-results(end+1).name='dirclustercoeffs';
-results(end).mex_fast = mex_fast;
-results(end).mat_fast = mat_fast;
-results(end).mex_std = mex_std;
-results(end).mat_std = mat_std;
-
-%% Directed Clustering coefficients
+%% Undirected Clustering coefficients
 nrep=30; mex_fast=0; mat_fast=0; mex_std=0; mat_std=0;
 undircc_results=[mex_fast mat_fast mex_std mat_std];
 szs=[1 10 100 5000 10000 50000];
 for szi=1:length(szs)
+    fprintf('\n%20s size=%-5i     ', 'clustercoeffs', szs(szi));
     % Matlab needs 1 iteration to compile the function
     if szi==2, mex_fast=0; mat_fast=0; mex_std=0; mat_std=0; end
     for rep=1:nrep
+        fprintf('\b\b\b\b'); fprintf(' %3i', rep); 
         A=abs(sprandsym(szs(szi),25/szs(szi)));
         At=A'; 
         [rp ci ai]=sparse_to_csr(A); As.rp=rp; As.ci=ci; As.ai=ai;
@@ -237,7 +227,8 @@ for szi=1:length(szs)
     undircc_results(end+1,:) = [mex_fast mat_fast mex_std mat_std];
 end
 %%
-undircc_results=diff(dircc_results);
+fprintf('\n');
+undircc_results=diff(undircc_results);
 results(end+1).name='clustercoeffs';
 results(end).mex_fast = mex_fast;
 results(end).mat_fast = mat_fast;
