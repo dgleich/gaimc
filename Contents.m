@@ -28,6 +28,7 @@
 %
 % Helper functions
 % sparse_to_csr              - Compressed sparse row arrays from a matrix
+% load_gaimc_graph           - Loads a sample graph from the library
 
 % David Gleich
 % Copyright, Stanford University, 2008-2009
