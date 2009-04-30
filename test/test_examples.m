@@ -1,3 +1,6 @@
+%% bfs
+load_gaimc_graph('bfs_example.mat') % use the dfs example from Boost
+d = bfs(A,1)
 
 %% scomponents
 % scomponents
