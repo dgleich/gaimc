@@ -15,7 +15,7 @@ function [d rt]=corenums(A)
 % Decomposition of Networks."  Sept. 1 2002.
 %
 % Example:
-%   load('graphs/cores_example.mat')
+%   load_gaimc_graph('cores_example'); % the graph A has three components
 %   corenums(A)
 %
 

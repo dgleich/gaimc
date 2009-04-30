@@ -25,3 +25,7 @@ subplot(1,2,1); graph_draw(A,xy,'labels',labels); title('Original');
 % draw component
 subplot(1,2,2); graph_draw(Acc,xy2,'labels',labels2); title('Component');
 
+%% corenums
+load_gaimc_graph('cores_example'); % the graph A has three components
+corenums(A)
+
