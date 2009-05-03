@@ -11,6 +11,21 @@ function varargout=mst_prim(A,full,u)
 % [ti tj tv] = mst_prim(...) returns the edges from the matrix and does not
 % convert to a sparse matrix structure.  This saves a bit of work and is
 % required when there are 0 edge weights.
+%
+% Example:
+%   load_gaimc_graph('airports'); % A(i,j) = negative travel time
+%   A = -A; % convert to travel time.
+%   A = max(A,A'); % make the travel times symmetric
+%   T = mst_prim(A);
+%   gplot(T,xy); % look at the minimum travel time tree in the US
+
+% David Gleich
+% Copyright, Stanford University, 2008-2009
+
+%  History:
+%  2009-05-02: Added example
+
+% TODO: Add example
 
 if ~exist('full','var') || isempty(full), full=0; end
 if ~exist('target','var') || isempty(full), u=1; end
@@ -19,9 +34,11 @@ if isstruct(A), rp=A.rp; ci=A.ci; ai=A.ai; check=0;
 else [rp ci ai]=sparse_to_csr(A); check=1;
 end
 if check && any(ai)<0, error('gaimc:prim', ...
-        'prim''s algorithm cannot handle negative edge weights.'); end
+        'prim''s algorithm cannot handle negative edge weights.'); 
+end
 if check && ~isequal(A,A'), error('gaimc:prim', ...
-        'prim''s algorithm requires an undirected graph.'); end
+        'prim''s algorithm requires an undirected graph.'); 
+end
 nverts=length(rp)-1; 
 d=Inf*ones(nverts,1); T=zeros(nverts,1); L=zeros(nverts,1);
 pred=zeros(1,length(rp)-1);
@@ -29,7 +46,10 @@ pred=zeros(1,length(rp)-1);
 % enter the main dijkstra loop
 for iter=1:nverts
     if iter==1, root=u; 
-    else root=mod(u+iter-1,nverts)+1; if L(v)>0, continue; end, end
+    else 
+        root=mod(u+iter-1,nverts)+1; 
+        if L(v)>0, continue; end 
+    end
     n=1; T(n)=root; L(root)=n; % oops, n is now the size of the heap
     d(root) = 0;
     while n>0

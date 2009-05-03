@@ -5,6 +5,13 @@ d = bfs(A,1)
 %% dfs
 load_gaimc_graph('dfs_example.mat') % use the dfs example from Boost
 d = dfs(A,1)
+
+%% mst_prim
+load_gaimc_graph('airports'); % A(i,j) = negative travel time
+A = -A; % convert to travel time.
+A = max(A,A'); % make the travel times symmetric
+T = mst_prim(A);
+gplot(T,xy); % look at the minimum travel time tree in the US
  
 %% scomponents
 % scomponents
