@@ -1,4 +1,4 @@
-%% Demo of gaimc - Graph Algorithms in Matlab code`
+%% Demo of gaimc - 'Graph Algorithms In Matlab Code'
 % Matlab includes great algorithms to work with sparse matrices but does
 % provide a reasonable set of algorithms to work with sparse matrices as
 % graph data structures.  My other project -- MatlabBGL -- provides a
@@ -18,6 +18,16 @@
 % To store the connectivity structure of the graph, gaimc uses the
 % adjacency matrix of a graph.  
 
+%% Loading helper
+% To make loading our sample graphs easy, gaimc defines it's own function
+% to load graphs.
+
+load_gaimc_graph('dfs_example'); % loads one of our example graphs
+whos
+
+%%
+% This helps make our examples work regardless of where the current
+% directory lies.  
 
 %% Search algorithms
 % The two standard graph search algorithms are depth first search and 
