@@ -75,6 +75,63 @@ figure(1); clf; graph_draw(A,xy,'labels',num2str(dt));
 
 %% Minimum spanning trees
 % A minimum spanning tree is a set of edges from a graph that ...
+%
+% This demo requires the mapping toolbox for maximum effect, but we'll do
+% okay without it.
+
+%%
+% Our data comes from a graph Brendan Frey prepared for his affinity
+% propagation clustering tool.  For 456 cities in the US, we have the mean
+% travel time between airports in those cities, along with their latitude
+% and longitude.
+load_gaimc_graph('airports')
+
+%%
+% For some reason, the data is stored with the negative travel time between
+% cities.  (I believe this is so that closer cities have larger edges
+% between them.)  But for a minimum spanning tree, we want the actual
+% travel time between cities.
+A = -A;
+
+%%
+% Now, we just call MST and look at the result.
+T = mst_prim(A);
+
+%%
+% Oops, travel time isn't symmetric!  Let's just pick the longest possible
+% time.
+A = max(A,A');
+T = mst_prim(A);
+sum(sum(T))/2 % total travel time in tree
+
+%% 
+% Well, the total weight isn't that helpful, let's _look_ at the data
+% instead.
+clf;
+gplot(T,xy);
+
+%%
+% Hey!  That looks like the US!  You can see regional airports and get some
+% sense of the overall connectivity.  Now, we can use the mapping toolbox
+% to look at the data even closer.
+%
+% These next lines plot a map of the US with states colored.  
+ax = worldmap('USA');
+load coast
+geoshow(ax, lat, long,...
+    'DisplayType', 'polygon', 'FaceColor', [.45 .60 .30])
+states = shaperead('usastatelo', 'UseGeoCoords', true);
+faceColors = makesymbolspec('Polygon',...
+    {'INDEX', [1 numel(states)], 'FaceColor', polcmap(numel(states))});
+    geoshow(ax, states, 'DisplayType', 'polygon', 'SymbolSpec', faceColors)
+set(gcf,'Position', [   52   234   929   702]);
+%%
+% That's the US, now we need to plot our data on top of it.
+[X,Y] = gplot(T,xy); % get the information to reproduce a gplot
+plotm(Y,X,'k.-','LineWidth',1.5); % plot the lines on the map 
+%% 
+% We need to clear the axes after the mapping toolbox
+clf;
 
 %% Connected components
 
