@@ -73,3 +73,11 @@ subplot(1,2,2); graph_draw(Acc,xy2,'labels',labels2); title('Component');
 load_gaimc_graph('cores_example'); % the graph A has three components
 corenums(A)
 
+%% sparse_to_csr
+A=sparse(6,6); A(1,1)=5; A(1,5)=2; A(2,3)=-1; A(4,1)=1; A(5,6)=1; 
+[rp ci ai]=sparse_to_csr(A);
+
+%% csr_to_sparse
+A=sparse(6,6); A(1,1)=5; A(1,5)=2; A(2,3)=-1; A(4,1)=1; A(5,6)=1; 
+[rp ci ai]=sparse_to_csr(A); 
+A2 = csr_to_sparse(rp,ci,ai);

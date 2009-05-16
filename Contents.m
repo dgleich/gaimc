@@ -29,9 +29,10 @@
 %
 % Helper functions
 % sparse_to_csr              - Compressed sparse row arrays from a matrix
+% csr_to_sparse              - Convert back to Matlab sparse matrices
 % load_gaimc_graph           - Loads a sample graph from the library
 
-% David Gleich
+% David F. Gleich
 % Copyright, Stanford University, 2008-2009
 
 % History
