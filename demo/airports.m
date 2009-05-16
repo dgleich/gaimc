@@ -67,12 +67,10 @@ set(gcf,'Position', [   52   234   929   702]);
 % That's the US, now we need to plot our data on top of it.
 [X,Y] = gplot(T,xy); % get the information to reproduce a gplot
 plotm(Y,X,'k.-','LineWidth',1.5); % plot the lines on the map 
-%% 
-% We need to clear the axes after the mapping toolbox
-clf;
+
 %%
 % Let's just look at the continential US too.
-figure; ax = usamap('conus');
+clf; ax = usamap('conus');
 states = shaperead('usastatelo', 'UseGeoCoords', true, 'Selector',...
     {@(name) ~any(strcmp(name,{'Alaska','Hawaii'})), 'Name'});
 faceColors = makesymbolspec('Polygon',...
@@ -85,9 +83,6 @@ plotm(Y,X,'k.-','LineWidth',1.5); % plot the lines on the map
 % One interesting aspect of this map is that major airline hubs (Chicago,
 % New York, etc. are not well represented.  One possible explaination is
 % that they have larger delays than other regional airports.
-%
-% Clear the figure again before proceeding.
-clf;
 
 %% Honolulu to St. Johns?
 % Before, we saw that the lengthiest route was between St. John's and
