@@ -7,10 +7,9 @@ function [sci sizes] = scomponents(A)
 % connected components.  Otherwise, it output the strongly connected
 % components.
 %
-% 
-%
-% The implement is from Tarjan's 1972 paper: Depth-first search and linear 
-% graph algorithms. In SIAM's Journal of Computing, 1972, 1, pp.146-160.
+% The implementation is from Tarjan's 1972 paper: Depth-first search and 
+% linear graph algorithms. In SIAM's Journal of Computing, 1972, 1, 
+% pp.146-160.
 %
 % See also DMPERM
 %
@@ -21,7 +20,6 @@ function [sci sizes] = scomponents(A)
 %   R = sparse(1:size(A,1),ci,1,size(A,1),ncomp); % create a restriction matrix
 %   CG = R'*A*R;                  % create the graph with each component 
 %                                 % collapsed into a single node.
-
 
 % David Gleich
 % Copyright, Stanford University, 2008
