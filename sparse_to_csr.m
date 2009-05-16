@@ -1,4 +1,4 @@
-function [rp ci ai]=sparse_to_csr(A,varargin)
+function [rp ci ai ncol]=sparse_to_csr(A,varargin)
 % SPARSE_TO_CSR Convert a sparse matrix into compressed row storage arrays
 % 
 % [rp ci ai] = sparse_to_csr(A) returns the row pointer (rp), column index
@@ -12,7 +12,7 @@ function [rp ci ai]=sparse_to_csr(A,varargin)
 %   A=sparse(6,6); A(1,1)=5; A(1,5)=2; A(2,3)=-1; A(4,1)=1; A(5,6)=1; 
 %   [rp ci ai]=sparse_to_csr(A)
 %
-% See also SPARSE_TO_CSC
+% See also CSR_TO_SPARSE
 
 % David Gleich
 % Copyright, Stanford University, 2008
@@ -20,12 +20,14 @@ function [rp ci ai]=sparse_to_csr(A,varargin)
 % History
 % 2008-04-07: Initial version
 % 2008-04-24: Added triple array input
+% 2009-05-01: Added ncol output
 
 error(nargchk(1, 4, nargin, 'struct'))
 retc = nargout>1; reta = nargout>2;
 
 if nargin>1
-    n = varargin{end};
+    n = varargin{3};
+    if nargin>4, ncol = varargin{4}; end
     nzi = A; nzj = varargin{1};
     if reta && length(varargin) > 2, nzv = varargin{2}; end    
     nz = length(A);
@@ -35,11 +37,15 @@ if nargin>1
     if reta && length(varargin) < 3, error('gaimc:invalidInput',...
             'no value array passed for triplet input, see usage'); end
     if ~isscalar(n), error('gaimc:invalidInput',...
-            ['the final input to sparse_to_csr with triple input was not ' ...
+            ['the 4th input to sparse_to_csr with triple input was not ' ...
              'a scalar']); end
-        
+    if nargin < 5, ncol = max(nzj); 
+    elif ~isscalar(ncol), error('gaimc:invalidInput',...
+            ['the 5th input to sparse_to_csr with triple input was not ' ...
+             'a scalar']); 
+    end
 else
-    n = size(A,1); nz=nnz(A);
+    n = size(A,1); nz = nnz(A); ncol = size(A,2);
     retc = nargout>1; reta = nargout>2;
     if reta,     [nzi nzj nzv] = find(A); 
     else         [nzi nzj] = find(A);
