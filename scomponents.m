@@ -14,7 +14,7 @@ function [sci sizes] = scomponents(A)
 % See also DMPERM
 %
 % Example:
-%   load('graphs/cores_example'); % the graph A has three components
+%   load_gaimc_graph('cores_example'); % the graph A has three components
 %   ci = scomponents(A)
 %   ncomp = max(ci)               % should be 3
 %   R = sparse(1:size(A,1),ci,1,size(A,1),ncomp); % create a restriction matrix
