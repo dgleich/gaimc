@@ -31,6 +31,11 @@ cc=dirclustercoeffs(A);
 [maxval maxind]=max(cc)
 labels(maxind) % most clustered vertex in the nervous system
 
+%% graph_draw
+load_gaimc_graph('dfs_example');
+graph_draw(A,xy);
+
+
 %% mst_prim
 load_gaimc_graph('airports'); % A(i,j) = negative travel time
 A = -A; % convert to travel time.

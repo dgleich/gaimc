@@ -25,10 +25,14 @@ function h = graph_draw(adj, xy, varargin)
 % See also GPLOT
 % 
 % Example:
+%   load_gaimc_graph('dfs_example');
+%   graph_draw(A,xy);
 
 
 % 2009-02-26 interface modified by David Gleich <dgleich@stanford.edu> 
 %            to remove automatic layout
+% 2009-05-15: Added example
+
 % 24 Feb 2004  cleaned up, optimized and corrected by Leon Peshkin pesha @ ai.mit.edu 
 % Apr-2000  draw_graph   Ali Taylan Cemgil   <cemgil@mbfys.kun.nl> 
 % 1995-1997 arrow        Erik A. Johnson     <johnsone@uiuc.edu>
@@ -121,10 +125,10 @@ function [t, wd] = textoval(x, y, str, fontsize, c)
 %             c - colors 
 % OUTPUT:     t - Object Handles
 %         width - x and y  width of ovals 
-temp = [];
 if ~isa(str,'cell'), str = cellstr(str); end;
 N = length(str);    
 wd = zeros(N,2);
+temp = zeros(N,2);
 for i = 1:N,
     tx = text(x(i),y(i),str{i},'HorizontalAlignment','center','VerticalAlign','middle','FontSize', fontsize);
     sz = get(tx, 'Extent');
@@ -137,7 +141,7 @@ for i = 1:N,
     wd(i,:) = [wx wy];
     delete(tx);
     tx = text(x(i),y(i),str{i},'HorizontalAlignment','center','VerticalAlign','middle', 'FontSize', fontsize);      
-    temp = [temp;  tx ptc];
+    temp(i,:) = [tx ptc];
 end;
 t = temp; 
 
@@ -165,9 +169,10 @@ function [h, wd] = textbox(x,y,str,c)
 % OUTPUT:    h - Object Handles
 %           wd - x and y Width of boxes 
 
-h = [];
-if ~isa(str,'cell') str=cellstr(str); end;    
+if ~isa(str,'cell'), str=cellstr(str); end
 N = length(str);
+wd = zeros(N,2);
+h = zeros(N,2);
 for i = 1:N,
     tx = text(x(i),y(i),str{i},'HorizontalAlignment','center','VerticalAlign','middle');
     sz = get(tx, 'Extent');
@@ -178,7 +183,7 @@ for i = 1:N,
     wd(i,:) = [wx wy];
     delete(tx);
     tx = text(x(i),y(i),str{i},'HorizontalAlignment','center','VerticalAlign','middle');      
-    h = [h; tx ptc];
+    h(i,:) = [tx ptc];
 end;
 
 function [h,yy,zz] = my_arrow(varargin)
@@ -211,30 +216,31 @@ oneax = 1;      % all(ax==ax(1));  LPM
 if (oneax),
 	T = zeros(4,4); invT = zeros(4,4);
 else
-	T = zeros(16,1); invT = zeros(16,1); end
+	T = zeros(16,1); invT = zeros(16,1); 
+end
 axnotdone = 1; % logical(ones(size(ax)));  LPM 
-while (any(axnotdone)),
+while (any(axnotdone))
 	ii = 1;  % LPM min(find(axnotdone));
 	curax = ax(ii);
 	curpage = page(ii);
 	% get axes limits and aspect ratio
 	axl = [get(curax,'XLim'); get(curax,'YLim'); get(curax,'ZLim')];
-	oldaxlims(min(find(oldaxlims(:,1)==0)),:) = [curax reshape(axl',1,6)];
+	oldaxlims(find(oldaxlims(:,1)==0, 1),:) = [curax reshape(axl',1,6)];
 	% get axes size in pixels (points)
 	u = get(curax,'Units');
 	axposoldunits = get(curax,'Position');
 	really_curpage = curpage & strcmp(u,'normalized');
-	if (really_curpage),
+	if (really_curpage)
 		curfig = get(curax,'Parent');  		pu = get(curfig,'PaperUnits');
 		set(curfig,'PaperUnits','points');  pp = get(curfig,'PaperPosition');
 		set(curfig,'PaperUnits',pu);         set(curax,'Units','pixels');
 		curapscreen = get(curax,'Position'); set(curax,'Units','normalized');
 		curap = pp.*get(curax,'Position');
-	else,
+    else
 		set(curax,'Units','pixels');
 		curapscreen = get(curax,'Position');
 		curap = curapscreen;
-	end;
+    end
 	set(curax,'Units',u);      set(curax,'Position',axposoldunits);
 	% handle non-stretched axes position
 	str_stretch = {'DataAspectRatioMode'; 'PlotBoxAspectRatioMode' ; 'CameraViewAngleMode' };
@@ -242,7 +248,7 @@ while (any(axnotdone)),
 	                'CameraViewAngleMode' ; 'CameraUpVectorMode'};
 	notstretched = strcmp(get(curax,str_stretch),'manual');
 	manualcamera = strcmp(get(curax,str_camera),'manual');
-	if ~arrow_WarpToFill(notstretched,manualcamera,curax),
+	if ~arrow_WarpToFill(notstretched,manualcamera,curax)
 		% find the true pixel size of the actual axes
 		texttmp = text(axl(1,[1 2 2 1 1 2 2 1]), ...
 		               axl(2,[1 1 2 2 1 1 2 2]), axl(3,[1 1 1 1 2 2 2 2]),'');
@@ -252,51 +258,51 @@ while (any(axnotdone)),
 		textpos = cat(1,textpos{:});
 		textpos = max(textpos(:,1:2)) - min(textpos(:,1:2));
 		% adjust the axes position
-		if (really_curpage),  			% adjust to printed size
+		if (really_curpage)  			% adjust to printed size
 			textpos = textpos * min(curap(3:4)./textpos);
 			curap = [curap(1:2)+(curap(3:4)-textpos)/2 textpos];
-		else,                        % adjust for pixel roundoff
+        else                         % adjust for pixel roundoff
 			textpos = textpos * min(curapscreen(3:4)./textpos);
 			curap = [curap(1:2)+(curap(3:4)-textpos)/2 textpos];
-		end;
-	end;
+        end
+    end
 	% adjust limits for log scale on axes
 	curxyzlog = [strcmp(get(curax,'XScale'),'log'); ...
 	             strcmp(get(curax,'YScale'),'log'); strcmp(get(curax,'ZScale'),'log')];
-	if (any(curxyzlog)),
+	if (any(curxyzlog))
 		ii = find([curxyzlog;curxyzlog]);
-		if (any(axl(ii)<=0)),
+		if (any(axl(ii)<=0))
 			error([upper(mfilename) ' does not support non-positive limits on log-scaled axes.']);
-		else,
+        else
 			axl(ii) = log10(axl(ii));
-		end;
-	end;
+        end
+    end
 	% correct for 'reverse' direction on axes;
 	curreverse = [strcmp(get(curax,'XDir'),'reverse'); ...
 	              strcmp(get(curax,'YDir'),'reverse'); strcmp(get(curax,'ZDir'),'reverse')];
 	ii = find(curreverse);
-	if ~isempty(ii),
+	if ~isempty(ii)
 		axl(ii,[1 2])=-axl(ii,[2 1]);
-	end;
+    end
 	% compute the range of 2-D values
 	curT = get(curax,'Xform');
 	lim = curT*[0 1 0 1 0 1 0 1;0 0 1 1 0 0 1 1;0 0 0 0 1 1 1 1;1 1 1 1 1 1 1 1];
 	lim = lim(1:2,:)./([1;1]*lim(4,:));
-	curlimmin = min(lim')';
-	curlimrange = max(lim')' - curlimmin;
+	curlimmin = min(lim,[],2);
+	curlimrange = max(lim,[],2) - curlimmin;
 	curinvT = inv(curT);
-	if (~oneax),
-		curT = curT.'; curinvT = curinvT.'; curT = curT(:); curinvT = curinvT(:);
-	end;
+	if ~oneax
+        curT = curT.'; curinvT = curinvT.'; curT = curT(:); curinvT = curinvT(:);
+    end
 	% check which arrows to which cur corresponds
 	ii = find((ax==curax)&(page==curpage));
-	oo = ones(1,length(ii)); 	axr(:,ii) = diff(axl')' * oo;
+	oo = ones(1,length(ii)); 	axr(:,ii) = diff(axl,1,2) * oo;
 	axm(:,ii) = axl(:,1) * oo;  axrev(:,ii) = curreverse  * oo;
 	ap(:,ii)  = curap(3:4)' * oo; xyzlog(:,ii) = curxyzlog   * oo;
 	limmin(:,ii) = curlimmin  * oo;  limrange(:,ii) = curlimrange * oo;
 	if (oneax),
 		T    = curT;  invT = curinvT;
-	else,
+    else
 		T(:,ii) = curT * oo; invT(:,ii) = curinvT * oo;
 	end;
 	axnotdone(ii) = zeros(1,length(ii));
@@ -305,16 +311,16 @@ oldaxlims(oldaxlims(:,1)==0,:) = [];
 
 % correct for log scales
 curxyzlog = xyzlog.';  ii = find(curxyzlog(:));
-if ~isempty(ii),
+if ~isempty(ii)
 	start(ii) = real(log10(start(ii))); stop(ii) = real(log10(stop(ii)));
-	if (all(imag(crossdir)==0)), % pulled (ii) subscript on crossdir, 12/5/96 eaj
+	if (all(imag(crossdir)==0)) % pulled (ii) subscript on crossdir, 12/5/96 eaj
 		crossdir(ii) = real(log10(crossdir(ii)));
-	end;
-end;
+    end
+end
 ii = find(axrev.');    % correct for reverse directions
-if ~isempty(ii),
+if ~isempty(ii)
 	start(ii) = -start(ii);  stop(ii) = -stop(ii); crossdir(ii) = -crossdir(ii);
-end;
+end
 start  = start.';  stop  = stop.';   % transpose start/stop values
 % take care of defaults, page was done above
 ii = find(isnan(start(:)));  if ~isempty(ii),  start(ii) = axm(ii)+axr(ii)/2;  end;
@@ -329,38 +335,42 @@ page = page.'; crossdir  = crossdir.';  ends = ends.'; ax   = ax.';
 
 % for all points with start==stop, start=stop-(verysmallvalue)*(up-direction);
 ii = find(all(start==stop));
-if ~isempty(ii),
+if ~isempty(ii)
 	% find an arrowdir vertical on screen and perpendicular to viewer
 	%	transform to 2-D
 		tmp1 = [(stop(:,ii)-axm(:,ii))./axr(:,ii);ones(1,length(ii))];
 		if (oneax), twoD=T*tmp1;
-		else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T(:,ii).*tmp1;
+        else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T(:,ii).*tmp1;
 		      tmp2=zeros(4,4*length(ii)); tmp2(:)=tmp1(:);
-		      twoD=zeros(4,length(ii)); twoD(:)=sum(tmp2)'; end;
+		      twoD=zeros(4,length(ii)); twoD(:)=sum(tmp2)'; 
+        end
 		twoD=twoD./(ones(4,1)*twoD(4,:));
 	%	move the start point down just slightly
 		tmp1 = twoD + [0;-1/1000;0;0]*(limrange(2,ii)./ap(2,ii));
 	%	transform back to 3-D
 		if (oneax), threeD=invT*tmp1;
-		else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT(:,ii).*tmp1;
+        else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT(:,ii).*tmp1;
 		      tmp2=zeros(4,4*length(ii)); tmp2(:)=tmp1(:);
-		      threeD=zeros(4,length(ii)); threeD(:)=sum(tmp2)'; end;
+		      threeD=zeros(4,length(ii)); threeD(:)=sum(tmp2)'; 
+        end
 		start(:,ii) = (threeD(1:3,:)./(ones(3,1)*threeD(4,:))).*axr(:,ii)+axm(:,ii);
 end;
 % compute along-arrow points
 %	transform Start points
 	tmp1 = [(start-axm)./axr; 1];
 	if (oneax), X0=T*tmp1;
-	else, tmp1 = [tmp1;tmp1;tmp1;tmp1]; tmp1=T.*tmp1;
+    else  tmp1 = [tmp1;tmp1;tmp1;tmp1]; tmp1=T.*tmp1;
 	      tmp2 = zeros(4,4); tmp2(:)=tmp1(:);
-	      X0=zeros(4,1); X0(:)=sum(tmp2)'; end;
+	      X0=zeros(4,1); X0(:)=sum(tmp2)'; 
+    end
 	X0=X0./(ones(4,1)*X0(4,:));
 %	transform Stop points
 	tmp1=[(stop-axm)./axr; 1];
 	if (oneax), Xf=T*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T.*tmp1;
+    else  tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T.*tmp1;
 	      tmp2=zeros(4,4); tmp2(:)=tmp1(:);
-	      Xf=zeros(4,1); Xf(:)=sum(tmp2)'; end;
+	      Xf=zeros(4,1); Xf(:)=sum(tmp2)'; 
+    end
 	Xf=Xf./(ones(4,1)*Xf(4,:));
 %	compute pixel distance between points
 	D = sqrt(sum(((Xf(1:2,:)-X0(1:2,:)).*(ap./limrange)).^2));
@@ -389,44 +399,50 @@ end;
 %	compute stoppoints
 	tmp1 = X0.*(ones(4,1)*(len0./D))+Xf.*(ones(4,1)*(1-len0./D));
 	if (oneax), tmp3 = invT*tmp1;
-	else, tmp1 = [tmp1;tmp1;tmp1;tmp1]; tmp1 = invT.*tmp1;
+    else  tmp1 = [tmp1;tmp1;tmp1;tmp1]; tmp1 = invT.*tmp1;
 	      tmp2 = zeros(4,4); tmp2(:) = tmp1(:);
-	      tmp3 = zeros(4,1); tmp3(:) = sum(tmp2)'; end;
+	      tmp3 = zeros(4,1); tmp3(:) = sum(tmp2)'; 
+    end
 	stoppoint = tmp3(1:3,:)./(ones(3,1)*tmp3(4,:)).*axr+axm;
 %	compute tippoints
 	tmp1=X0.*(ones(4,1)*(len1./D))+Xf.*(ones(4,1)*(1-len1./D));
 	if (oneax), tmp3=invT*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT.*tmp1;
+    else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT.*tmp1;
 	      tmp2=zeros(4,4); tmp2(:)=tmp1(:);
-	      tmp3=zeros(4,1); tmp3(:)=sum(tmp2)'; end;
+	      tmp3=zeros(4,1); tmp3(:)=sum(tmp2)'; 
+    end
 	tippoint = tmp3(1:3,:)./(ones(3,1)*tmp3(4,:)).*axr+axm;
 %	compute basepoints
 	tmp1=X0.*(ones(4,1)*(len2./D))+Xf.*(ones(4,1)*(1-len2./D));
 	if (oneax), tmp3=invT*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT.*tmp1;
+    else  tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT.*tmp1;
 	      tmp2=zeros(4,4); tmp2(:)=tmp1(:);
-	      tmp3=zeros(4,1); tmp3(:)=sum(tmp2)'; end;
+	      tmp3=zeros(4,1); tmp3(:)=sum(tmp2)'; 
+    end
 	basepoint = tmp3(1:3,:)./(ones(3,1)*tmp3(4,:)).*axr+axm;
 %	compute startpoints
 	tmp1=X0.*(ones(4,1)*(1-slen0./D))+Xf.*(ones(4,1)*(slen0./D));
 	if (oneax), tmp3=invT*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT.*tmp1;
+    else  tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT.*tmp1;
 	      tmp2=zeros(4,4); tmp2(:) = tmp1(:);
-	      tmp3=zeros(4,1); tmp3(:) = sum(tmp2)'; end;
+	      tmp3=zeros(4,1); tmp3(:) = sum(tmp2)'; 
+    end
 	startpoint = tmp3(1:3,:)./(ones(3,1)*tmp3(4,:)).*axr+axm;
 %	compute stippoints
 	tmp1=X0.*(ones(4,1)*(1-slen1./D))+Xf.*(ones(4,1)*(slen1./D));
 	if (oneax), tmp3=invT*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1 = invT.*tmp1;
+    else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1 = invT.*tmp1;
 	      tmp2=zeros(4,4); tmp2(:)=tmp1(:); 
-	      tmp3=zeros(4,1); tmp3(:)=sum(tmp2)'; end;
+	      tmp3=zeros(4,1); tmp3(:)=sum(tmp2)'; 
+    end
 	stippoint = tmp3(1:3,:)./(ones(3,1)*tmp3(4,:)).*axr+axm;
 %	compute sbasepoints
 	tmp1=X0.*(ones(4,1)*(1-slen2./D))+Xf.*(ones(4,1)*(slen2./D));
 	if (oneax), tmp3=invT*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT.*tmp1;
+    else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=invT.*tmp1;
 	      tmp2=zeros(4,4); tmp2(:)=tmp1(:);
-	      tmp3=zeros(4,1); tmp3(:)=sum(tmp2)'; end;
+	      tmp3=zeros(4,1); tmp3(:)=sum(tmp2)'; 
+    end
 	sbasepoint = tmp3(1:3,:)./(ones(3,1)*tmp3(4,:)).*axr+axm;
 
 % compute cross-arrow directions for arrows with NormalDir specified
@@ -446,17 +462,19 @@ if ~isempty(ii),
 		tmp1 = (tmp1-axm(:,[ii ii ii ii])) ./ axr(:,[ii ii ii ii]);
 		tmp1 = [tmp1; ones(1,4*numii)];
 		if (oneax), X0=T*tmp1;
-		else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T(:,[ii ii ii ii]).*tmp1;
+        else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T(:,[ii ii ii ii]).*tmp1;
 		      tmp2=zeros(4,16*numii); tmp2(:)=tmp1(:);
-		      X0=zeros(4,4*numii); X0(:)=sum(tmp2)'; end;
+		      X0=zeros(4,4*numii); X0(:)=sum(tmp2)'; 
+        end
 		X0=X0./(ones(4,1)*X0(4,:));
 	%	transform stop points
 		tmp1 = [(2*stop(:,ii)-start(:,ii)-axm(:,ii))./axr(:,ii);ones(1,numii)];
 		tmp1 = [tmp1 tmp1 tmp1 tmp1];
-		if (oneax), Xf=T*tmp1;
-		else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T(:,[ii ii ii ii]).*tmp1;
+		if (oneax) Xf=T*tmp1;
+        else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=T(:,[ii ii ii ii]).*tmp1;
 		      tmp2=zeros(4,16*numii); tmp2(:)=tmp1(:);
-		      Xf=zeros(4,4*numii); Xf(:)=sum(tmp2)'; end;
+		      Xf=zeros(4,4*numii); Xf(:)=sum(tmp2)'; 
+        end
 		Xf=Xf./(ones(4,1)*Xf(4,:));
 	%	compute perpendicular directions
 		pixfact = ((limrange(1,ii)./limrange(2,ii)).*(ap(2,ii)./ap(1,ii))).^2;
@@ -489,18 +507,20 @@ end;
 	tmp1 = (st - axm11) ./ axr11;
 	tmp1 = [tmp1; ones(1,size(tmp1,2))];
 	if (oneax), X0=T*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=[T T T T T T T T T T T].*tmp1;
+    else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=[T T T T T T T T T T T].*tmp1;
 	      tmp2=zeros(4,44); tmp2(:)=tmp1(:);
-	      X0=zeros(4,11); X0(:)=sum(tmp2)'; end;
+	      X0=zeros(4,11); X0(:)=sum(tmp2)'; 
+    end
 	X0=X0./(ones(4,1)*X0(4,:));
 %	compute stop points
 	tmp1 = ([start tipcross basecross sbasecross stipcross stop stipcross sbasecross basecross tipcross start] ...
 	     - axm11) ./ axr11;
 	tmp1 = [tmp1; ones(1,size(tmp1,2))];
 	if (oneax), Xf=T*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=[T T T T T T T T T T T].*tmp1;
+    else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=[T T T T T T T T T T T].*tmp1;
 	      tmp2=zeros(4,44); tmp2(:)=tmp1(:);
-	      Xf=zeros(4,11); Xf(:)=sum(tmp2)'; end;
+	      Xf=zeros(4,11); Xf(:)=sum(tmp2)'; 
+    end
 	Xf=Xf./(ones(4,1)*Xf(4,:));
 %	compute lengths
 	len0  = len.*((ends==1)|(ends==3)).*tan(tipangle/180*pi);
@@ -513,9 +533,10 @@ end;
 	tmp1 = X0.*(ones(4,1)*(1-le./D)) + Xf.*(ones(4,1)*(le./D));
 %	inverse transform
 	if (oneax), tmp3=invT*tmp1;
-	else, tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=[invT invT invT invT invT invT invT invT invT invT invT].*tmp1;
+    else tmp1=[tmp1;tmp1;tmp1;tmp1]; tmp1=[invT invT invT invT invT invT invT invT invT invT invT].*tmp1;
 	      tmp2=zeros(4,44); tmp2(:)=tmp1(:);
-	      tmp3=zeros(4,11); tmp3(:)=sum(tmp2)'; end;
+	      tmp3=zeros(4,11); tmp3(:)=sum(tmp2)'; 
+    end
 	pts = tmp3(1:3,:)./(ones(3,1)*tmp3(4,:)) .* axr11 + axm11;
 % correct for ones where the crossdir was specified
 ii = find(~(all(crossdir==0)|any(isnan(crossdir))));
@@ -543,7 +564,7 @@ x(:) = pts(1,ii)';   y(:) = pts(2,ii)';  z(:) = pts(3,ii)';
   % % create or modify the patches
 H = 0; 
    % % make or modify the arrows
-if arrow_is2DXY(ax(1)), zz=[]; else, zz=z(:,1); end;
+if arrow_is2DXY(ax(1)), zz=[]; else zz=z(:,1); end;
 xyz = {'XData',x(:,1),'YData',y(:,1),'ZData',zz,'Tag',ArrowTag};
 H(1) = patch(xyz{:});
   % % additional properties
@@ -560,7 +581,7 @@ function [out,is2D] = arrow_is2DXY(ax)
 	out(:) = abs(views(:,2))==90;
 	is2D(:) = out(:) | all(rem(views',90)==0)';
 
-function out = arrow_WarpToFill(notstretched,manualcamera,curax)
+function out = arrow_WarpToFill(notstretched,manualcamera,curax) %#ok<INUSL>
 % check if we are in "WarpToFill" mode.
 	out = strcmp(get(curax,'WarpToFill'),'on');
 	% 'WarpToFill' is undocumented, so may need to replace this by
