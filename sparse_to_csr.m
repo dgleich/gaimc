@@ -21,15 +21,16 @@ function [rp ci ai ncol]=sparse_to_csr(A,varargin)
 % 2008-04-07: Initial version
 % 2008-04-24: Added triple array input
 % 2009-05-01: Added ncol output
+% 2009-05-15: Fixed triplet input
 
-error(nargchk(1, 4, nargin, 'struct'))
+error(nargchk(1, 5, nargin, 'struct'))
 retc = nargout>1; reta = nargout>2;
 
 if nargin>1
-    n = varargin{3};
     if nargin>4, ncol = varargin{4}; end
     nzi = A; nzj = varargin{1};
     if reta && length(varargin) > 2, nzv = varargin{2}; end    
+    if nargin<4, n=max(nzi); else n=varargin{3}; end
     nz = length(A);
     if length(nzi) ~= length(nzj), error('gaimc:invalidInput',...
             'length of nzi (%i) not equal to length of nzj (%i)', nz, ...
@@ -40,9 +41,10 @@ if nargin>1
     end
     if ~isscalar(n), error('gaimc:invalidInput',...
             ['the 4th input to sparse_to_csr with triple input was not ' ...
-             'a scalar']); end
+             'a scalar']); 
+    end
     if nargin < 5, ncol = max(nzj); 
-    elif ~isscalar(ncol), error('gaimc:invalidInput',...
+    elseif ~isscalar(ncol), error('gaimc:invalidInput',...
             ['the 5th input to sparse_to_csr with triple input was not ' ...
              'a scalar']); 
     end

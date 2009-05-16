@@ -1,4 +1,8 @@
 function test_sparse_to_csr
+%% Previous failure
+[ai,aj,av]=find(ones(5));
+sparse_to_csr(ai,aj,av);
+
 %% 100 random trials
 for t=1:100
     A = sprand(100,80,0.01);
