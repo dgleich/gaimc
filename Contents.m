@@ -15,6 +15,9 @@
 % Minimum spanning tree algorithms
 % mst_prim                   - Compute an MST using Prim's algorithm
 %
+% Matching
+% bipartite_matching         - Compute a maximum weight bipartite matching
+%
 % Connected components
 % scomponents                - Compute strongly connected components
 % largest_component          - Selects only the largest component
@@ -41,7 +44,6 @@
 
 % TODO for release
 % Fix mlintrpt errors
-% Implement bipartite matching
 
 
 % Future todos

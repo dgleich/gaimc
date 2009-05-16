@@ -2,6 +2,11 @@
 load_gaimc_graph('bfs_example.mat') % use the dfs example from Boost
 d = bfs(A,1)
 
+%% bipartite_matching
+A = rand(10,8); % bipartite matching between random data
+[val mi mj] = bipartite_matching(A);
+val
+
 %% clustercoeffs
 load_gaimc_graph('clique-10');
 cc = clustercoeffs(A) % they are all equal! as we expect in a clique
