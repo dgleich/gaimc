@@ -2,6 +2,11 @@
 load_gaimc_graph('bfs_example.mat') % use the dfs example from Boost
 d = bfs(A,1)
 
+%% clustercoeffs
+load_gaimc_graph('clique-10');
+cc = clustercoeffs(A) % they are all equal! as we expect in a clique
+
+
 %% dfs
 load_gaimc_graph('dfs_example.mat') % use the dfs example from Boost
 d = dfs(A,1)
