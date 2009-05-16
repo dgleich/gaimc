@@ -40,7 +40,10 @@ try
         try
             publish('demo');
             publish('airports');
-            publish('performance_comparison');
+            publish('performance_comparison_simple');
+            if tobuild('pages_fullperf')
+                publish('performance_comparison');
+            end
         catch ME
             fprintf('******************\n')
             fprintf('Publishing failed!\n');
