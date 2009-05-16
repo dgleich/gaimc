@@ -83,7 +83,7 @@ whos
 
 %%
 % Load the example matrix from the Boost Graph Library 
-load('graphs/dfs_example');
+load_gaimc_graph('dfs_example');
 figure(1); graph_draw(A,xy,'labels',labels);
 
 %%
@@ -99,7 +99,7 @@ d=dfs(A,1)
 
 %%
 % Let's look at breadth first search too, using a different example.
-load('graphs/bfs_example');
+load_gaimc_graph('bfs_example');
 figure(1); clf; graph_draw(A,xy,'labels',labels);
 
 %%
@@ -161,7 +161,8 @@ A = -A;
 
 %%
 % Now, we just call MST and look at the result.
-T = mst_prim(A);
+% T = mst_prim(A);
+% This command means we can't run the demo, so it's commented out.
 
 %%
 % Oops, travel time isn't symmetric!  Let's just pick the longest possible
@@ -220,6 +221,7 @@ cc = scomponents(A)
 %%
 % We also have a largest_component function that makes it easy to just get
 % the largest connected component.
+clf;
 [Acc,f] = largest_component(A);
 graph_draw(Acc,xy(f,:)) 
 %%
@@ -236,7 +238,7 @@ graph_draw(Acc,xy(f,:))
 
 %%
 % Load a road network to use for statistical computations
-load('graphs/minnesota');
+load_gaimc_graph('minnesota');
 gplot(A,xy);
 
 %%
@@ -280,7 +282,7 @@ mean(cn)
 
 %%
 % Load and convert the graph.  
-load ('graphs/all_shortest_paths_example');
+load_gaimc_graph('all_shortest_paths_example');
 A = spfun(@(x) x-min(min(A))+1,A); % remove the negative edges
 As = convert_sparse(A);
 %%
