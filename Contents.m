@@ -42,8 +42,6 @@
 % Write demo code
 % Fix mlintrpt errors
 % Update copyright info everywhere
-% Examples for dirclustercoeffs
-% Documentation for dirclustercoeffs
 % Implement bipartite matching
 
 % Future todos

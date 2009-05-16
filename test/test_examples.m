@@ -20,6 +20,12 @@ path =[]; u = rst; while (u ~= lax) path=[u path]; u=pred(u); end
 fprintf('%s',labels{lax}); 
 for i=path; fprintf(' --> %s', labels{i}); end, fprintf('\n');
 
+%% dirclustercoeffs
+load_gaimc_graph('celegans'); % load the C elegans nervous system network
+cc=dirclustercoeffs(A);
+[maxval maxind]=max(cc)
+labels(maxind) % most clustered vertex in the nervous system
+
 %% mst_prim
 load_gaimc_graph('airports'); % A(i,j) = negative travel time
 A = -A; % convert to travel time.
