@@ -8,11 +8,14 @@ function cc=clustercoeffs(A,weighted,normalized)
 % control normalization and weighted computation.  If normalized=0 or
 % false, then the computation is not normalized by d*(d-1) in the
 % unweighted case.  If weighted=0 or false, then the weights of the matrix
-% A are ignored.
+% A are ignored.  Either parameter will assume it's default value if you 
+% specify an empty matrix.
 %
 % See also DIRCLUSTERCOEFFS
 %
 % Example:
+%   load_gaimc_graph('clique-10');
+%   cc = clustercoeffs(A) % they are all equal! as we expect in a clique
 
 if ~exist('normalized','var') || isempty(normalized), normalized=true; end
 if ~exist('weighted','var') || isempty(weighted), weighted=true; end
@@ -37,7 +40,7 @@ else
 end
 n=length(rp)-1;
 
-cc=zeros(n,1); ind=false(n,1); cache=zeros(n,1); degs=zeros(n,1);
+cc=zeros(n,1); ind=false(n,1); cache=zeros(n,1); 
 ew=1; ew2=1;
 for v=1:n
     for rpi=rp(v):rp(v+1)-1

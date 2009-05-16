@@ -11,6 +11,8 @@ function [d dt pred] = bfs(A,u,target)
 % [...] = bfs(A,u,v) stops the bfs when it hits the vertex v
 %
 % Example:
+%   load_gaimc_graph('bfs_example.mat') % use the dfs example from Boost
+%   d = bfs(A,1)
 %
 % See also DFS
 

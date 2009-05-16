@@ -19,6 +19,8 @@ function [d dt ft pred] = dfs(A,u,full,target)
 % yet.
 %
 % Example:
+%   load_gaimc_graph('dfs_example.mat') % use the dfs example from Boost
+%   d = dfs(A,1)
 %
 % See also BFS
 

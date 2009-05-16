@@ -1,14 +1,25 @@
 function [sci sizes] = scomponents(A)
 % SCOMPONENTS Compute the strongly connected components of a graph
 %
-% ci=scomponents(A) returns the 
+% ci=scomponents(A) returns an index for the component number of every 
+% vertex in the graph A.  The total number of components is max(ci).
+% If the input is undirected, then this algorithm outputs just the 
+% connected components.  Otherwise, it output the strongly connected
+% components.
 %
-% The implement is from Tarjan's 1972 paper: Depth-first search and linear 
-% graph algorithms. In SIAM's Journal of Computing, 1972, 1, pp.146-160.
-%
-% Example:
+% The implementation is from Tarjan's 1972 paper: Depth-first search and 
+% linear graph algorithms. In SIAM's Journal of Computing, 1972, 1, 
+% pp.146-160.
 %
 % See also DMPERM
+%
+% Example:
+%   load('graphs/cores_example'); % the graph A has three components
+%   ci = scomponents(A)
+%   ncomp = max(ci)               % should be 3
+%   R = sparse(1:size(A,1),ci,1,size(A,1),ncomp); % create a restriction matrix
+%   CG = R'*A*R;                  % create the graph with each component 
+%                                 % collapsed into a single node.
 
 % David Gleich
 % Copyright, Stanford University, 2008

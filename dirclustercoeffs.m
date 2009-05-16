@@ -2,11 +2,30 @@ function [cc cccyc ccmid ccin ccout nf]=dirclustercoeffs(A,weighted,normalized)
 % DIRCLUSTERCOEFFS Compute clustering coefficients for a directed graph
 %
 % cc=dirclustercoeffs(A) returns the directed clustering coefficients
-% (which are identical to the clustering coefficients on an undirected
-% graph.
+% (which generalize the clustering coefficients of an undirected graph, 
+% and so calling this function on an undirected graph will produce the same
+% answer as clustercoeffs, but less efficiently.)
+%
+% This function implements the algorithm from Fagiolo, Phys Rev. E. 76
+% 026107 (doi:10:1103/PhysRevE.76.026107).  
+%
+% [cc,cccyc,ccmid,ccin,ccout,nf]=dirclusteringcoeffs(A) returns different 
+% components of the clustering coefficients corresponding to cycles,
+% middles, in triangles, and out triangles.  See the manuscript for a 
+% description of the various types of triangles counted in the above
+% metrics.
+%
+% See also CLUSTERCOEFFS
+%
+% Example:
+%   load_gaimc_graph('celegans'); % load the C elegans nervous system network
+%   cc=dirclustercoeffs(A);
+%   [maxval maxind]=max(cc)
+%   labels(maxind) % most clustered vertex in the nervous system
 
 % History
 % 2008-04-22: Initial coding
+% 2009-05-15: Documentation and example
 
 if ~exist('normalized','var') || isempty(normalized), normalized=true; end
 if ~exist('weighted','var') || isempty(weighted), weighted=true; end
@@ -37,9 +56,12 @@ if nargout>3, ccin=zeros(n,1); end
 if nargout>4, ccout=zeros(n,1); end
 if nargout>5, nf=zeros(n,1); end
 % precompute degrees
-for v=1:n, for rpi=rp(v):rp(v+1)-1, w=ci(rpi); 
+for v=1:n, 
+    for rpi=rp(v):rp(v+1)-1, 
+        w=ci(rpi); 
         if v==w, continue; else degs(w)=degs(w)+1; degs(v)=degs(v)+1; end
-end, end        
+    end
+end
 ew=1; ew2=1;
 for v=1:n
     % setup counts for the different cycle types

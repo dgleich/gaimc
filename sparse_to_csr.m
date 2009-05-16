@@ -12,7 +12,7 @@ function [rp ci ai ncol]=sparse_to_csr(A,varargin)
 %   A=sparse(6,6); A(1,1)=5; A(1,5)=2; A(2,3)=-1; A(4,1)=1; A(5,6)=1; 
 %   [rp ci ai]=sparse_to_csr(A)
 %
-% See also CSR_TO_SPARSE
+% See also CSR_TO_SPARSE, SPARSE
 
 % David Gleich
 % Copyright, Stanford University, 2008
@@ -33,9 +33,11 @@ if nargin>1
     nz = length(A);
     if length(nzi) ~= length(nzj), error('gaimc:invalidInput',...
             'length of nzi (%i) not equal to length of nzj (%i)', nz, ...
-            length(nzj)); end
+            length(nzj)); 
+    end
     if reta && length(varargin) < 3, error('gaimc:invalidInput',...
-            'no value array passed for triplet input, see usage'); end
+            'no value array passed for triplet input, see usage'); 
+    end
     if ~isscalar(n), error('gaimc:invalidInput',...
             ['the 4th input to sparse_to_csr with triple input was not ' ...
              'a scalar']); end
@@ -69,3 +71,4 @@ for i=n:-1:1
 end
 rp(1)=0;
 rp=rp+1;
+
