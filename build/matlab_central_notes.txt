@@ -1,0 +1,35 @@
+Picture: minnesota graph (demo_08.png)
+
+Title : gaimc : Graph Algorithms In Matlab Code
+Summary (100 chars) :
+Efficient pure-Matlab implementations of graph algorithms to complement MatlabBGL's mex functions.
+Description (5000 chars) :
+
+While MatlabBGL uses the Boost Graph Library for efficient graph routines,
+gaimc implements everything in pure Matlab code.  While the routines are 
+slower, they aren't as slow as I initially thought.  Since people often
+have problems getting MatlabBGL to compile on new versions of Matlab
+or on new architectures, this library is then a complement to MatlabBGL.
+
+See the published M-files for a few examples of the capabilities.
+
+Functions
+  depth first search (dfs) 
+  breadth first search (bfs)
+  connected components (scomponents)
+  maximum weight bipartite matching (bipartite_matching)
+  Dijkstra's shortest paths (dijkstra)
+  Prim's minimum spanning tree (mst_prim)
+  clustering coefficients (clustercoeffs)
+  directed clustering coefficients (dirclustercoeffs)
+  core numbers (corenums)
+
+The project is maintained at github : http://github.com/dgleich/gaimc/tree/master
+
+Tags:
+
+graph, network, dijkstra, core numbers, prim, dfs, bfs, connected components,
+strongly connected components, clustering coefficients, directed clustering coefficients,
+directed network, directed graph, depth first search, breadth first search,
+shortest paths, minimum spanning tree, mst
+  
