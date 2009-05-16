@@ -17,6 +17,54 @@
 %% Sparse matrices as graphs
 % To store the connectivity structure of the graph, gaimc uses the
 % adjacency matrix of a graph.  
+%
+% A graph is represented by a set of vertices and a set of
+% edges between the vertices.  Often, we write $G = (V,E)$ to denote the
+% graph, the set of vertices, and the set of edges, respectively.  In
+% gaimc, like in my other package MatlabBGL, we represent graphs with their
+% adjacency matrices.  This representation is handy in Matlab because
+% Matlab is rather efficient at working with the large sparse matrices that
+% typically arise as adjacency matrices.
+%
+% To convert from $G=(V,E)$ to an adjacency matrix, we identify each vertex
+% with a row of the matrix via a bijective map.  The adjacency matrix is
+% then a $|V| \times |V|$ matrix called A.  The entry A(i,j) = 1 for
+% any edge between in $E$ and 0 otherwise.  Let's look at an example.
+
+load_gaimc_graph('bfs_example');
+graph_draw(A,xy,'labels',labels)
+full(A)
+labels'
+
+%%
+% This output means that vertex 'r' is row 1, vertex 's' is row 2 and
+% because A(1,2) = 1, then there is an edge between them, just like in the
+% picture.
+%
+% One funny property is that A(2,1) = 1 too!  So we actually have to store
+% each edge twice in the adjacency matrix.  This might seem wasteful, but
+% its hard to avoid as I've learned while working on graph algorithms.  So
+% don't worry about it!  It also makes the generalization to directed
+% graphs (below) easy.
+%
+% For more information about the adjacency matrix representation of a
+% graph, see a standard book on graph algorithms.
+%
+
+%% Weighted and directed graphs
+% Our previous case handled the situation for undirected graphs only.  To
+% encode weighted and directed graphs, we use weighted and non-symmetric
+% adjacency matrices.
+%
+% For a weighted matrix, A(i,j) = distance between i and j for most of the
+% algorithms in gaimc.  But A(i,j) = 0 means there is no edge, and so
+% sometimes things can get a little tricky to get what you want.
+%
+% For a directed graph, just set A(i,j) ~= A(j,i).  The adjacency matrix
+% won't be symmetric, but that's what you want!
+%
+% To understand more, explore the examples or read up on adjacency matrices
+% in graph theory books.
 
 %% Loading helper
 % To make loading our sample graphs easy, gaimc defines it's own function
@@ -68,10 +116,28 @@ figure(1); clf; graph_draw(A,xy,'labels',num2str(dt));
 % Notice how the algorithm visits all vertices one edge away from the start
 % vertex (0) before visiting those two edges away.
 
+
 %% Shortest paths
 % In the previous two examples, the distance between vertices was
 % equivalent to the number of edges.  Some graphs, however, have specific
-% weights, such as the graph of flights between airports.
+% weights, such as the graph of flights between airports.  We can use this
+% information to build information about the _shortest path_ between two
+% nodes in a network.  
+
+% Find the minimum travel time between Los Angeles (LAX) and
+% Rochester Minnesota (RST).
+load_gaimc_graph('airports')
+A = -A; % fix funny encoding of airport data
+lax=247; rst=355;
+
+[d pred] = dijkstra(A,lax); % find all the shorest paths from Los Angeles.
+
+fprintf('Minimum time: %g\n',d(rst));
+% Print the path
+fprintf('Path:\n');
+path =[]; u = rst; while (u ~= lax) path=[u path]; u=pred(u); end
+fprintf('%s',labels{lax}); 
+for i=path; fprintf(' --> %s', labels{i}); end, fprintf('\n');
 
 %% Minimum spanning trees
 % A minimum spanning tree is a set of edges from a graph that ...
@@ -115,6 +181,51 @@ gplot(T,xy);
 % sense of the overall connectivity.  
 
 %% Connected components
+% The connected components of a network determine which parts of the
+% network are reachable from other parts.  One of your first questions
+% about any network should generally be: is it connected?
+%
+% There are two types of connected components: components and strongly
+% connected components.  gaimc only implements an algorithm for the latter
+% case, but that's okay!  It turns out it computes exactly the right thing
+% for connected components as well.  The difference only occurs when the
+% graph is undirected vs. directed.
+
+load_gaimc_graph('dfs_example')
+graph_draw(A,xy)
+
+%%
+% This picture shows there are 3 strongly connected components and 2 
+% connected components
+
+% get the number of strongly connected components
+max(scomponents(A)) 
+
+%%
+
+% get the number of connected components
+max(scomponents(A|A'))  % we make the graph symmetric first by "or"ing each entry
+
+%%
+% Let's look at the vertices in the strongly connected components
+cc = scomponents(A)
+%%
+% The output tells us that vertices 1,2,3,5,6 are in one strong component,
+% vertex 4 is it's own strong component, and vertices 7,8,9 are in another
+% one.  Remember that a strong component is all the vertices mutually
+% reachable from a given vertex.  If you start at vertex 4, you can't get
+% anywhere else!  That's why it is in a different component than vertices 
+% 1,2,3,5,6.
+
+%%
+% We also have a largest_component function that makes it easy to just get
+% the largest connected component.
+[Acc,f] = largest_component(A);
+graph_draw(Acc,xy(f,:)) 
+%%
+% The filter variable f, tells us which vertices in the original graph made
+% it into the largest strong component.  We can just apply that filter to
+% the coordinates xy and reuse them for drawing the graph!
 
 %% Statistics
 % Graph statistics are just measures that indicate a property of the graph
@@ -132,6 +243,7 @@ gplot(A,xy);
 % Average vertex degree
 d = sum(A,2);
 mean(d)
+
 %% 
 % So the average number of roads at any intersection is 2.5.  My guess is
 % that many roads have artificial intersections in the graph structure that

@@ -39,7 +39,6 @@
 
 
 % TODO for release
-% Write demo code
 % Fix mlintrpt errors
 % Update copyright info everywhere
 % Implement bipartite matching
