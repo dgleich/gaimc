@@ -21,8 +21,8 @@ function [sci sizes] = scomponents(A)
 %   CG = R'*A*R;                  % create the graph with each component 
 %                                 % collapsed into a single node.
 
-% David Gleich
-% Copyright, Stanford University, 2008
+% David F. Gleich
+% Copyright, Stanford University, 2008-2009
 
 % History
 % 2008-04-11: Initial coding

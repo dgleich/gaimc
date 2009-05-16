@@ -10,7 +10,7 @@ function As = convert_sparse(A)
 %
 % See also SPARSE_TO_CSR SPARSE
 
-% David Gleich
+% David F. Gleich
 % Copyright, Stanford University, 2008-2009
 
 % History

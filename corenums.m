@@ -21,8 +21,8 @@ function [d rt]=corenums(A)
 
 % See also WCORENUMS
 
-% David Gleich
-% Copyright, Stanford University, 2008
+% David F. Gleich
+% Copyright, Stanford University, 2008-2009
 
 % History
 % 2008-04-21: Initial Coding

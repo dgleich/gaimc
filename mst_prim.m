@@ -19,7 +19,7 @@ function varargout=mst_prim(A,full,u)
 %   T = mst_prim(A);
 %   gplot(T,xy); % look at the minimum travel time tree in the US
 
-% David Gleich
+% David F. Gleich
 % Copyright, Stanford University, 2008-2009
 
 %  History:

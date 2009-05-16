@@ -24,8 +24,8 @@ function [d dt ft pred] = dfs(A,u,full,target)
 %
 % See also BFS
 
-% David Gleich
-% Copyright, Stanford University, 2008
+% David F. Gleich
+% Copyright, Stanford University, 2008-2009
 
 % History
 % 2008-04-10: Initial coding

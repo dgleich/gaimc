@@ -17,6 +17,12 @@ function cc=clustercoeffs(A,weighted,normalized)
 %   load_gaimc_graph('clique-10');
 %   cc = clustercoeffs(A) % they are all equal! as we expect in a clique
 
+% David F. Gleich
+% Copyright, Stanford University, 2008-2009
+
+% History
+% 2009-05-15: First history comment, originally written in 2008
+
 if ~exist('normalized','var') || isempty(normalized), normalized=true; end
 if ~exist('weighted','var') || isempty(weighted), weighted=true; end
 donorm=1; usew=1;

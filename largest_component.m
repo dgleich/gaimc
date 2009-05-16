@@ -25,7 +25,7 @@ function [Acc,p] = largest_component(A,sym)
 %   % draw component
 %   subplot(1,2,2); graph_draw(Acc,xy2,'labels',labels2); title('Component');
 
-% David Gleich
+% David F. Gleich
 % Copyright, Stanford University, 2008-2009
 
 % History

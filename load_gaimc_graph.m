@@ -18,8 +18,8 @@ function varargout=load_gaimc_graph(graphname)
 %   P=load_gaimc_graph('kt-7-2.mat') 
 %   % so you don't have to put the path in for examples!
 
-% David Gleich
-% Copyright, Stanford University, 2009
+% David F. Gleich
+% Copyright, Stanford University, 2008-2009
 
 % History
 % 2009-04-27: Initial coding

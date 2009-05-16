@@ -14,8 +14,8 @@ function [rp ci ai ncol]=sparse_to_csr(A,varargin)
 %
 % See also CSR_TO_SPARSE, SPARSE
 
-% David Gleich
-% Copyright, Stanford University, 2008
+% David F. Gleich
+% Copyright, Stanford University, 2008-2009
 
 % History
 % 2008-04-07: Initial version

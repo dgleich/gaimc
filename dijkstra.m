@@ -31,8 +31,8 @@ function [d pred]=dijkstra(A,u)
 %   fprintf('%s',labels{lax}); 
 %   for i=path; fprintf(' --> %s', labels{i}); end, fprintf('\n');
 
-% David Gleich
-% Copyright, Stanford University, 2008-2009
+% David F. Gleich
+% Copyright, Stanford University, 2008-200909
 
 % History
 % 2008-04-09: Initial coding

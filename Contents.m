@@ -41,7 +41,6 @@
 
 % TODO for release
 % Fix mlintrpt errors
-% Update copyright info everywhere
 % Implement bipartite matching
 
 

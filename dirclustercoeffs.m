@@ -23,6 +23,9 @@ function [cc cccyc ccmid ccin ccout nf]=dirclustercoeffs(A,weighted,normalized)
 %   [maxval maxind]=max(cc)
 %   labels(maxind) % most clustered vertex in the nervous system
 
+% David F. Gleich
+% Copyright, Stanford University, 2008-2009
+
 % History
 % 2008-04-22: Initial coding
 % 2009-05-15: Documentation and example
