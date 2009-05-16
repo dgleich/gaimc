@@ -6,6 +6,10 @@
 % considerably slower.  This example examines this lore and shows that
 % |gaimc| is typically within a factor of 2-4 of the mex code.  
 
+%%
+% *This demo is unlikely to work on your own computer.*
+% *They depend on having the MatlabBGL routines in one spot.*
+
 %% Setup the environment
 % We need MatlabBGL on the path
 graphdir = '../graphs/';
@@ -237,7 +241,9 @@ results(end).mat_std = mat_std;
 
 %% Summarize the results
 % We are going to summarize the results in a bar plot based on the
-% algorithm.  Each algorithm is a single bar, where the performance of the
+% algorithm.  Each algorithm is a single barcopyfile(['..' filesep 'dfs.m'],'dfstest.m');
+graphs = {'all_shortest_paths_example', 'clr-24-1', 'cs-stanford', ...
+    'minnesota','tapir'};, where the performance of the
 % mex code is 1.  
 nresults=length(results);
 Ystd = zeros(nresults,1);
