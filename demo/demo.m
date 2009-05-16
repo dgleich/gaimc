@@ -112,26 +112,7 @@ gplot(T,xy);
 
 %%
 % Hey!  That looks like the US!  You can see regional airports and get some
-% sense of the overall connectivity.  Now, we can use the mapping toolbox
-% to look at the data even closer.
-%
-% These next lines plot a map of the US with states colored.  
-ax = worldmap('USA');
-load coast
-geoshow(ax, lat, long,...
-    'DisplayType', 'polygon', 'FaceColor', [.45 .60 .30])
-states = shaperead('usastatelo', 'UseGeoCoords', true);
-faceColors = makesymbolspec('Polygon',...
-    {'INDEX', [1 numel(states)], 'FaceColor', polcmap(numel(states))});
-    geoshow(ax, states, 'DisplayType', 'polygon', 'SymbolSpec', faceColors)
-set(gcf,'Position', [   52   234   929   702]);
-%%
-% That's the US, now we need to plot our data on top of it.
-[X,Y] = gplot(T,xy); % get the information to reproduce a gplot
-plotm(Y,X,'k.-','LineWidth',1.5); % plot the lines on the map 
-%% 
-% We need to clear the axes after the mapping toolbox
-clf;
+% sense of the overall connectivity.  
 
 %% Connected components
 
