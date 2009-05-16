@@ -31,8 +31,6 @@ function [Acc,p] = largest_component(A,sym)
 % History
 % 2009-04-29: Initial coding
 
-% TODO: Write example
-
 if ~exist('sym','var') || isempty(sym), sym=0; end
 
 if sym

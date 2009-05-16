@@ -17,8 +17,6 @@ function cc=clustercoeffs(A,weighted,normalized)
 %   load_gaimc_graph('clique-10');
 %   cc = clustercoeffs(A) % they are all equal! as we expect in a clique
 
-% TODO Example
-
 if ~exist('normalized','var') || isempty(normalized), normalized=true; end
 if ~exist('weighted','var') || isempty(weighted), weighted=true; end
 donorm=1; usew=1;
