@@ -10,6 +10,12 @@ function As = convert_sparse(A)
 %
 % See also SPARSE_TO_CSR SPARSE
 
+% David Gleich
+% Copyright, Stanford University, 2008-2009
+
+% History
+% 2009-04-29: Initial coding
+
 [rp ci ai] = sparse_to_csr(A);
 As.rp = rp;
 As.ci = ci;
