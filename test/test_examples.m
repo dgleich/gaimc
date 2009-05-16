@@ -6,6 +6,20 @@ d = bfs(A,1)
 load_gaimc_graph('dfs_example.mat') % use the dfs example from Boost
 d = dfs(A,1)
 
+%% dijkstra
+% Find the minimum travel time between Los Angeles (LAX) and
+% Rochester Minnesota (RST).
+load_gaimc_graph('airports')
+A = -A; % fix funny encoding of airport data
+lax=247; rst=355;
+[d pred] = dijkstra(A,lax);
+fprintf('Minimum time: %g\n',d(rst));
+% Print the path
+fprintf('Path:\n');
+path =[]; u = rst; while (u ~= lax) path=[u path]; u=pred(u); end
+fprintf('%s',labels{lax}); 
+for i=path; fprintf(' --> %s', labels{i}); end, fprintf('\n');
+
 %% mst_prim
 load_gaimc_graph('airports'); % A(i,j) = negative travel time
 A = -A; % convert to travel time.

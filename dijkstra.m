@@ -1,10 +1,42 @@
 function [d pred]=dijkstra(A,u)
+% DIJKSTRA Compute shortest paths using Dijkstra's algorithm
+%
+% d=dijkstra(A,u) computes the shortest path from vertex u to all nodes 
+% reachable from vertex u using Dijkstra's algorithm for the problem.  
+% The graph is given by the weighted sparse matrix A, where A(i,j) is 
+% the distance between vertex i and j.  In the output vector d, 
+% the entry d(v) is the minimum distance between vertex u and vertex v.
+% A vertex w unreachable from u has d(w)=Inf.
+%
+% [d pred]=dijkstra(A,u) also returns the predecessor tree to generate 
+% the actual shorest paths.  In the predecessor tree pred(v) is the 
+% vertex preceeding v in the shortest path and pred(u)=0.  Any
+% unreachable vertex has pred(w)=0 as well.  
+%
+% If your network is unweighted, then use bfs instead.
+%
+% See also BFS
+%
+% Example:
+%   % Find the minimum travel time between Los Angeles (LAX) and
+%   % Rochester Minnesota (RST).
+%   load_gaimc_graph('airports')
+%   A = -A; % fix funny encoding of airport data
+%   lax=247; rst=355;
+%   [d pred] = dijkstra(A,lax);
+%   fprintf('Minimum time: %g\n',d(rst));
+%   % Print the path
+%   fprintf('Path:\n');
+%   path =[]; u = rst; while (u ~= lax) path=[u path]; u=pred(u); end
+%   fprintf('%s',labels{lax}); 
+%   for i=path; fprintf(' --> %s', labels{i}); end, fprintf('\n');
 
 % David Gleich
-% Copyright, Stanford University, 2008
+% Copyright, Stanford University, 2008-2009
 
 % History
 % 2008-04-09: Initial coding
+% 2009-05-15: Documentation
 
 if isstruct(A), rp=A.rp; ci=A.ci; ai=A.ai; check=0;
 else [rp ci ai]=sparse_to_csr(A); check=1;

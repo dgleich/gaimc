@@ -41,9 +41,9 @@
 % TODO for release
 % Write demo code
 % Fix mlintrpt errors
-% Update copyright info
-% Examples for mst_prim, dijkstra, dirclustercoeffs, dfs
-% Documentation for Dijkstra, dirclustercoeffs
+% Update copyright info everywhere
+% Examples for dirclustercoeffs
+% Documentation for dirclustercoeffs
 % Implement bipartite matching
 
 % Future todos
