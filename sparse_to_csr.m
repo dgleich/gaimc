@@ -31,12 +31,15 @@ if nargin>1
     nz = length(A);
     if length(nzi) ~= length(nzj), error('gaimc:invalidInput',...
             'length of nzi (%i) not equal to length of nzj (%i)', nz, ...
-            length(nzj)); end
+            length(nzj)); 
+    end
     if reta && length(varargin) < 3, error('gaimc:invalidInput',...
-            'no value array passed for triplet input, see usage'); end
+            'no value array passed for triplet input, see usage'); 
+    end
     if ~isscalar(n), error('gaimc:invalidInput',...
             ['the final input to sparse_to_csr with triple input was not ' ...
-             'a scalar']); end
+             'a scalar']); 
+    end
         
 else
     n = size(A,1); nz=nnz(A);
