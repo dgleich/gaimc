@@ -8,5 +8,7 @@ test_dfs
 test_load_gaimc_graph
 test_largest_component
 test_examples
+% test_dijkstra % required for floydwarshall
+test_floydwarshall
 
 end
