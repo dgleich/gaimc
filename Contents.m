@@ -1,7 +1,7 @@
 %=========================================
 % Graph Algorithms in Matlab Code (gaimc)
 %   Written by David Gleich
-%   Version 1.0 (beta)
+%   Version 1.1
 %   2008-2009
 %=========================================
 %
@@ -11,6 +11,7 @@
 %
 % Shortest path algorithms
 % dijkstra                   - Dijkstra's shortest path algorithm
+% floydwarshall              - Floyd-Warshall all shortest path algorithm
 %
 % Minimum spanning tree algorithms
 % mst_prim                   - Compute an MST using Prim's algorithm
@@ -43,7 +44,8 @@
 
 
 % TODO for release
-% Fix mlintrpt errors
+% Update demo with floydwarshall
+% Update airports with floydwarshall
 
 
 % Future todos
@@ -53,4 +55,3 @@
 % Implement a max-flow solver
 % Implement weighted core nums
 % More testing
-% Implement all pairs shortest paths with Floyd Warshall
