@@ -47,6 +47,10 @@
 
 
 % Future todos
+% Implement geometric random graph generation
+% Implement erdos reyni graph generatin
+% Implement spectral graph partitioning
+% Implement a max-flow solver
 % Implement weighted core nums
 % More testing
 % Implement all pairs shortest paths with Floyd Warshall
