@@ -24,11 +24,12 @@ function varargout=mst_prim(A,full,u)
 
 %  History:
 %  2009-05-02: Added example
+%  2009-11-25: Fixed bug with target 
 
 % TODO: Add example
 
 if ~exist('full','var') || isempty(full), full=0; end
-if ~exist('target','var') || isempty(full), u=1; end
+if ~exist('u','var') || isempty(u), u=1; end
 
 if isstruct(A), 
     rp=A.rp; ci=A.ci; ai=A.ai; 

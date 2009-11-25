@@ -10,5 +10,6 @@ test_largest_component
 test_examples
 % test_dijkstra % required for floydwarshall
 test_floydwarshall
+test_mst_prim
 
 end
